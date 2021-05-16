@@ -1,9 +1,13 @@
 from sympy.logic.boolalg import integer_to_term, term_to_integer
+from sympy.abc import x, y
 from sympy.parsing.sympy_parser import parse_expr
-from sympy.utilities.lambdify import lambdify
-from sympy.logic.boolalg import Not, Implies
+from sympy.utilities.lambdify import lambdify, implemented_function
+from sympy.logic.boolalg import Implies, Not
 import random
+from sympy import true, false
 from itertools import combinations, compress
+
+T0 = T1 = S = M = L = False
 
 
 def save_zero(f, n):
@@ -15,6 +19,9 @@ def save_one(f, n):
 
 
 def self_dual(f, n):
+    if (T0 and not T1) or (not T0 and T1):
+        return False
+
     cur = 0  # текущий набор аргументов функции
     rev = 2 ** n - 1  # противоположный к текущему набор аргументов функции
 
@@ -280,7 +287,7 @@ def linear(f, n):
 
 
 def calc(f, args, n):
-    return f(*[x == 1 for x in integer_to_term(args, n)])
+    return f(*[true if x == 1 else false for x in integer_to_term(args, n)])
 
 
 string = input()
@@ -288,13 +295,19 @@ expr = parse_expr(string)
 variables = list(expr.atoms())
 n = len(variables)
 
-f = lambdify(variables, expr, [{'Implies': Implies}, 'numpy'])
+f = lambdify(variables, expr, modules=[{'Implies': Implies}, 'numpy'])
 
-print('Save 0: ', save_zero(f, n))
-print('Save 1: ', save_one(f, n))
-print('Self dual: ', self_dual(f, n))
-print('Monotonic: ', monotonic(f, n))
-print('Linear: ', linear(f, n))
+T0 = save_zero(f, n)
+T1 = save_one(f, n)
+S = self_dual(f, n)
+M = monotonic(f, n)
+L = linear(f, n)
+
+print('Save 0: ', T0)
+print('Save 1: ', T1)
+print('Self dual: ', S)
+print('Monotonic: ', M)
+print('Linear: ', L)
 
 m = o_m(f, n)
 if m < 2:
