@@ -38,6 +38,14 @@ def self_dual(f, n):
     return True
 
 
+def isPrecede(a, b):
+    for i in range(0, len(a)):
+        if a[i] == 1 and b[i] == 0:
+            return False
+
+    return True
+
+
 def monotonic(f, n):
     vals = []  # динамический массив значений функции
 
@@ -48,9 +56,9 @@ def monotonic(f, n):
         # пробегаемся по степеням двойки, не больше текущей длины массива значений функции
         while i <= len(vals):
             # если текущий набор аргументов функции является степенью двойки i
-            # и последняя половина вектора значений функции длины i/2 строго меньше
-            # предпоследней половины, то функция не является монотонной
-            if cur % i == i - 1 and term_to_integer(vals[-i//2:]) < term_to_integer(vals[-i:-i//2]):
+            # и предпоследняя половина вектора значений функции длины i/2 не предшествует
+            # последней половине, то функция не является монотонной
+            if cur % i == i - 1 and not isPrecede(vals[-i:-i//2], vals[-i//2:]):
                 return False
             i *= 2
 
@@ -290,7 +298,7 @@ def calc(f, args, n):
     return f(*[true if x == 1 else false for x in integer_to_term(args, n)])
 
 
-string = input()
+string = input("Введите логическое выражение: ")
 expr = parse_expr(string)
 variables = list(expr.atoms())
 n = len(variables)
