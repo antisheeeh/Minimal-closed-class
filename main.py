@@ -179,6 +179,9 @@ def check_list_1(fs, m, n):
 
 
 def o_inf(f, n):
+    if not T1:
+        return False
+
     cur = 0  # текущий набор аргументов функции
     distinct = []  # список переменных, не удовлетворяющих условию замкнутости
 
@@ -203,6 +206,9 @@ def o_inf(f, n):
 
 
 def i_inf(f, n):
+    if not T0:
+        return False
+
     cur = 0  # текущий набор аргументов функции
     distinct = []  # список переменных, не удовлетворяющих условию замкнутости
 
@@ -277,7 +283,7 @@ def linear(f, n):
 
         return True
     else:
-        a_0 = calc(f, 0, n)
+        a_0 = int(calc(f, 0, n) == True)
         attempts = 5 * n
 
         for i in range(0, attempts):
@@ -317,6 +323,20 @@ print('Self dual: ', S)
 print('Monotonic: ', M)
 print('Linear: ', L)
 
+print('Calculate extra classes (O^inf, I^inf, U)? y/n')
+ans = input()
+if ans == 'n':
+    exit()
+
+print('O^inf: ', o_inf(f, n))
+print('I^inf: ', i_inf(f, n))
+print('U: ', u(f, n))
+
+print('Calculate extra classes (O^m, I^m)? y/n')
+ans = input()
+if ans == 'n':
+    exit()
+
 m = o_m(f, n)
 if m < 2:
     print('O^m: False')
@@ -328,7 +348,3 @@ if m < 2:
     print('I^m: False')
 else:
     print('I^m: m = ' + str(m))
-
-print('O^inf: ', o_inf(f, n))
-print('I^inf: ', i_inf(f, n))
-print('U: ', u(f, n))
