@@ -183,7 +183,7 @@ def o_inf(f, n):
         return False
 
     cur = 0  # текущий набор аргументов функции
-    distinct = []  # список переменных, не удовлетворяющих условию замкнутости
+    distinct = set()  # список переменных, не удовлетворяющих условию замкнутости
 
     while cur < 2 ** n:
         val = calc(f, cur, n)
@@ -194,7 +194,7 @@ def o_inf(f, n):
             # а значение функции равно нулю, то
             # эта переменная не удовлетворяет условию замкнутости
             if i not in distinct and val == False and cur >> i & 1 == 1:
-                distinct.append(i)
+                distinct.add(i)
                 # если число неудовлетворяющих переменных
                 # стало равно равно числу переменных функци,
                 # то функция не принадлежит рассматриваемому классу
@@ -210,7 +210,7 @@ def i_inf(f, n):
         return False
 
     cur = 0  # текущий набор аргументов функции
-    distinct = []  # список переменных, не удовлетворяющих условию замкнутости
+    distinct = set()  # список переменных, не удовлетворяющих условию замкнутости
 
     while cur < 2 ** n:
         val = calc(f, cur, n)
@@ -221,7 +221,7 @@ def i_inf(f, n):
             # а значение функции равно единице, то
             # эта переменная не удовлетворяет условию замкнутости
             if i not in distinct and val == True and cur >> i & 1 == 0:
-                distinct.append(i)
+                distinct.add(i)
                 # если число неудовлетворяющих переменных
                 # стало равно равно числу переменных функци,
                 # то функция не принадлежит рассматриваемому классу
@@ -235,7 +235,7 @@ def i_inf(f, n):
 def u(f, n):
     cur = 0  # текущий набор аргументов функции
     t = [0] * n
-    distinct = []
+    distinct = set()
 
     while cur < 2 ** n:
         val = calc(f, cur, n)
@@ -244,7 +244,7 @@ def u(f, n):
                 if val == bool(cur >> i & 1):
                     t[i] += 1
                 elif t[i] > 0 and val != bool(cur >> i & 1):
-                    distinct.append(i)
+                    distinct.add(i)
                     if len(distinct) == n:
                         return False
         cur += 1
